@@ -1,5 +1,7 @@
 import type { PruefKontext } from "@/lib/kontext";
 import type { Befund, KategorieId } from "@/lib/types";
+import { rechtModul } from "@/lib/module/recht";
+import { technikModul } from "@/lib/module/technik";
 
 export type ModulErgebnis = {
   befunde: Befund[];
@@ -15,6 +17,5 @@ export type PruefModul = {
 /**
  * Registrierte Prüfmodule. Die Reihenfolge bestimmt, in welcher Reihenfolge sie
  * laufen — die Anzeigereihenfolge im Report steuert KATEGORIE_DEFINITION.
- * Wird in den Meilensteinen 3 bis 5 gefüllt.
  */
-export const MODULE: PruefModul[] = [];
+export const MODULE: PruefModul[] = [technikModul, rechtModul];

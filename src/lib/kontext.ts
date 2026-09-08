@@ -138,11 +138,30 @@ export async function sammleKontext(eingabeUrl: string): Promise<PruefKontext> {
     contentType === "" ||
     /<html|<!doctype html/i.test(seite.body.slice(0, 1000));
 
+  // Reihenfolge zählt: Eine abweisende Antwort (403/503) liefert oft
+  // text/plain. Das ist keine "Datei statt Webseite", sondern eine Sperre —
+  // und der Nutzer soll das Richtige erfahren.
+  if (seite.status === 401 || seite.status === 403) {
+    throw new AbrufFehler(
+      `Zugriff abgewiesen: Status ${seite.status}`,
+      "Die Website hat unsere Anfrage abgewiesen. Manche Seiten sperren automatische Zugriffe grundsätzlich — dann lässt sie sich hier leider nicht prüfen.",
+      "nicht_erreichbar",
+    );
+  }
+
+  if (seite.status === 429 || seite.status === 503) {
+    throw new AbrufFehler(
+      `Server überlastet oder drosselt: Status ${seite.status}`,
+      "Der Server der Website ist gerade nicht bereit zu antworten. Bitte versuchen Sie es in ein paar Minuten noch einmal.",
+      "nicht_erreichbar",
+    );
+  }
+
   if (!siehtNachHtmlAus) {
     throw new AbrufFehler(
       `Kein HTML: ${seite.contentType}`,
       "Unter dieser Adresse liegt keine Webseite, sondern eine Datei. Bitte geben Sie die Startseite Ihrer Website ein.",
-      "nicht_erreichbar",
+      "kein_html",
     );
   }
 

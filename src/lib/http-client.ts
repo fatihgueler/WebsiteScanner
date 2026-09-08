@@ -53,7 +53,7 @@ export class AbrufFehler extends Error {
   constructor(
     message: string,
     readonly klartext: string,
-    readonly art: "nicht_erreichbar" | "zeitueberschreitung" | "budget",
+    readonly art: "nicht_erreichbar" | "zeitueberschreitung" | "kein_html" | "budget",
   ) {
     super(message);
     this.name = "AbrufFehler";

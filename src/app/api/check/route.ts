@@ -120,6 +120,9 @@ export async function POST(anfrage: Request): Promise<NextResponse<CheckAntwort>
       if (unbekannt.art === "zeitueberschreitung") {
         return fehler("zeitueberschreitung", unbekannt.klartext, 504);
       }
+      if (unbekannt.art === "kein_html") {
+        return fehler("kein_html", unbekannt.klartext, 422);
+      }
       return fehler("nicht_erreichbar", unbekannt.klartext, 502);
     }
 
