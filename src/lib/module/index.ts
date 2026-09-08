@@ -1,5 +1,7 @@
 import type { PruefKontext } from "@/lib/kontext";
 import type { Befund, KategorieId } from "@/lib/types";
+import { geoModul } from "@/lib/module/geo";
+import { inhaltModul } from "@/lib/module/inhalt";
 import { performanceModul } from "@/lib/module/performance";
 import { rechtModul } from "@/lib/module/recht";
 import { seoModul } from "@/lib/module/seo";
@@ -25,4 +27,6 @@ export const MODULE: PruefModul[] = [
   rechtModul,
   performanceModul,
   seoModul,
+  geoModul,
+  inhaltModul,
 ];
