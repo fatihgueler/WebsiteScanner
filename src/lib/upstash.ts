@@ -55,8 +55,11 @@ export async function pruefeRateLimit(kennung: string): Promise<LimitErgebnis> {
       uebrig: remaining,
       wiederholenIn: Math.max(0, Math.ceil((reset - Date.now()) / 1000)),
     };
-  } catch {
+  } catch (fehler) {
     // Redis nicht erreichbar: lieber prüfen lassen als den Nutzer aussperren.
+    // Aber nicht stillschweigend — sonst verschwindet das Rate-Limit im
+    // Betrieb unbemerkt und niemand erfährt davon.
+    console.error("Rate-Limit nicht auswertbar, Anfrage wird durchgelassen:", fehler);
     return { erlaubt: true, uebrig: PRUEFUNGEN_PRO_STUNDE, wiederholenIn: 0 };
   }
 }
@@ -70,7 +73,8 @@ export async function holeAusCache(url: string): Promise<Report | null> {
   try {
     const treffer = await redis.get<Report>(cacheSchluessel(url));
     return treffer ?? null;
-  } catch {
+  } catch (fehler) {
+    console.error("Cache nicht lesbar, Prüfung läuft neu:", fehler);
     return null;
   }
 }
@@ -79,9 +83,10 @@ export async function legeInCache(url: string, report: Report): Promise<void> {
   if (redis === null) return;
   try {
     await redis.set(cacheSchluessel(url), report, { ex: CACHE_SEKUNDEN });
-  } catch {
+  } catch (fehler) {
     // Ein fehlgeschlagener Cache-Schreibvorgang ist kein Grund, dem Nutzer
     // sein fertiges Ergebnis vorzuenthalten.
+    console.error("Cache nicht beschreibbar:", fehler);
   }
 }
 
