@@ -51,6 +51,30 @@ Umgebungsvariablen stehen in `.env.example`.
 Vercel. Repository verbinden, die Variablen aus `.env.example` in den
 Projekteinstellungen hinterlegen, Subdomain zuweisen.
 
+## Pitch-Modus (`/pitch`)
+
+Interner, passwortgeschützter Bereich für den Betreiber: Kundenwebsite prüfen,
+Ergebnis unter einem Betriebsnamen mit Notiz sichern und im Verkaufsgespräch
+wieder aufrufen. Gesicherte Prüfungen laufen nach 180 Tagen ab.
+
+Aktiviert wird der Bereich über `PITCH_PASSWORT` und `PITCH_SESSION_SECRET`
+(siehe `.env.example`). Fehlt eine der beiden Variablen, bleibt `/pitch`
+vollständig gesperrt — ein halb eingerichteter Passwortschutz ist keiner. Für
+das Sichern werden zusätzlich die Upstash-Zugangsdaten benötigt; ohne sie
+funktionieren Prüfung und Druckansicht trotzdem.
+
+Der öffentliche Check bleibt davon unberührt: dort wird weiterhin nichts
+gespeichert und nichts abgefragt.
+
+## Maßnahmen
+
+Jeder Befund mit Status `kritisch` oder `verbesserbar` bekommt eine konkrete
+Maßnahme und die Angabe, wer sie umsetzt (Server, Code, Gestaltung, Inhalt,
+Recht). Am Ende des Reports steht ein nach Gewerk gruppierter Maßnahmenplan.
+
+Die Texte liegen gesammelt in `src/lib/massnahmen.ts` — dort lassen sie sich
+für Angebote und Gespräche nachschärfen, ohne die Prüfmodule anzufassen.
+
 ## Was das Tool prüft
 
 Sechs Module, jedes mit eigenem Teilscore:

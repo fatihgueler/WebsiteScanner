@@ -39,9 +39,16 @@ function anzahl(gruppen: Gruppe[]): number {
 export function ReportAnsicht({
   report,
   onNeueUrl,
+  /**
+   * Im Pitch-Modus sieht der Betreiber denselben Report wie der Kunde — nur
+   * ohne den Abschlussblock, der zur Kontaktaufnahme auffordert. Dort steht
+   * stattdessen die Sicherungsleiste des Arbeitsplatzes.
+   */
+  pitchModus = false,
 }: {
   report: Report;
   onNeueUrl: () => void;
+  pitchModus?: boolean;
 }) {
   const [technischeAnsicht, setTechnischeAnsicht] = useState(false);
 
@@ -226,7 +233,7 @@ export function ReportAnsicht({
 
       {/* ---------- Abschluss: PDF und Kontakt ---------- */}
       <section
-        className="print-hidden mt-14 rounded-xl border border-border bg-card p-5 sm:p-7"
+        className={`print-hidden mt-14 rounded-xl border border-border bg-card p-5 sm:p-7 ${pitchModus ? "hidden" : ""}`}
         aria-labelledby="abschluss-titel"
       >
         <h2 id="abschluss-titel" className="font-heading text-xl font-medium">

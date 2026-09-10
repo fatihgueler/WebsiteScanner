@@ -13,6 +13,10 @@ type UrlFormProps = {
   /** Vorbelegung, wenn der Nutzer nach einem Fehler erneut startet. */
   startwert?: string;
   autoFocus?: boolean;
+  /** Beschriftung des Felds. Im Pitch-Modus ist es die Adresse des Kunden. */
+  beschriftung?: string;
+  /** Beschriftung der Schaltfläche. */
+  schaltflaeche?: string;
 };
 
 export function UrlForm({
@@ -20,6 +24,8 @@ export function UrlForm({
   laeuft,
   startwert = "",
   autoFocus = false,
+  beschriftung = "Adresse Ihrer Website",
+  schaltflaeche = "Kostenlos prüfen",
 }: UrlFormProps) {
   const feldId = useId();
   const fehlerId = `${feldId}-fehler`;
@@ -44,7 +50,7 @@ export function UrlForm({
         htmlFor={feldId}
         className="mb-2 block text-sm font-medium text-foreground"
       >
-        Adresse Ihrer Website
+        {beschriftung}
       </Label>
 
       <div className="flex flex-col gap-3 sm:flex-row">
@@ -87,7 +93,7 @@ export function UrlForm({
             </>
           ) : (
             <>
-              Kostenlos prüfen
+              {schaltflaeche}
               <ArrowRight className="size-4" aria-hidden="true" />
             </>
           )}

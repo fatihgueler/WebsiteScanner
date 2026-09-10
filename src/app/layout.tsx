@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
 import Link from "next/link";
+import { SiteFooter } from "@/components/site-footer";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -78,28 +79,7 @@ export default function RootLayout({
           {children}
         </main>
 
-        <footer className="site-footer print-hidden mt-20 border-t border-border/70">
-          <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-5 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-8">
-            <p>
-              Ein kostenloses Werkzeug von {site.marke}. Keine Anmeldung, keine
-              Speicherung der Prüfergebnisse.
-            </p>
-            <nav className="flex gap-5" aria-label="Rechtliches">
-              <Link
-                href="/impressum"
-                className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
-              >
-                Impressum
-              </Link>
-              <Link
-                href="/datenschutz"
-                className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
-              >
-                Datenschutz
-              </Link>
-            </nav>
-          </div>
-        </footer>
+        <SiteFooter />
       </body>
     </html>
   );

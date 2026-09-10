@@ -30,7 +30,7 @@ export default function DatenschutzSeite() {
         <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed text-muted-foreground">
           <li>Es gibt keine Anmeldung und kein Nutzerkonto.</li>
           <li>
-            Der Report wird nicht dauerhaft gespeichert und ist nicht über einen
+            Ihr Report wird nicht dauerhaft gespeichert und ist nicht über einen
             Link abrufbar.
           </li>
           <li>
@@ -164,6 +164,30 @@ export default function DatenschutzSeite() {
           Adresse wird gelöscht, sobald sie für diese Zwecke nicht mehr benötigt
           wird, spätestens nach sechs Monaten — es sei denn, es entsteht daraus
           ein Auftragsverhältnis mit eigenen Aufbewahrungspflichten.
+        </p>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="font-heading text-xl font-medium">Interner Bereich</h2>
+        <p className="mt-3 leading-relaxed text-muted-foreground">
+          Unter <span className="font-mono text-sm">/pitch</span> gibt es einen
+          passwortgeschützten Bereich, in dem ausschließlich der Betreiber
+          Prüfungen durchführt und deren Ergebnisse für Beratungsgespräche
+          sichert. Gespeichert werden dabei die geprüfte Internetadresse, das
+          Prüfergebnis sowie ein selbst vergebener Betriebsname und eine Notiz —
+          keine Daten von Besuchern dieser Website. Die Einträge werden nach 180
+          Tagen automatisch gelöscht.
+        </p>
+        <p className="mt-3 leading-relaxed text-muted-foreground">
+          Wenn Sie den öffentlichen Check oben benutzen, wird davon nichts
+          gesichert. Die Zusicherung, dass Ihr Ergebnis nicht gespeichert wird,
+          gilt unverändert.
+        </p>
+        <p className="mt-3 leading-relaxed text-muted-foreground">
+          Für die Anmeldung in diesem Bereich wird ein technisch notwendiges
+          Cookie gesetzt, das ausschließlich einen signierten Ablaufzeitpunkt
+          enthält und nach 30 Tagen verfällt. Rechtsgrundlage ist Art. 6 Abs. 1
+          lit. f DSGVO.
         </p>
       </section>
 
