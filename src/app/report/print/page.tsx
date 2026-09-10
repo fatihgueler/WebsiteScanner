@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BefundKarte } from "@/components/befund-karte";
+import { MassnahmenPlan } from "@/components/massnahmen-plan";
 import { ScoreRing, einordnungText } from "@/components/score-ring";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { DRUCK_SPEICHER_SCHLUESSEL } from "@/lib/report-uebergabe";
@@ -177,6 +178,9 @@ export default function DruckSeite() {
           </section>
         );
       })}
+
+      {/* ---------- Maßnahmenplan ---------- */}
+      <MassnahmenPlan massnahmen={report.massnahmen} />
 
       {/* ---------- Manuelle Hinweise ---------- */}
       {report.manuelleHinweise.length > 0 && (

@@ -1,4 +1,5 @@
 import { AlertTriangle, CheckCircle2, HelpCircle, Wrench } from "lucide-react";
+import { GewerkAbzeichen } from "@/components/gewerk-abzeichen";
 import type { Befund, Status } from "@/lib/types";
 
 /**
@@ -108,6 +109,23 @@ export function BefundKarte({
           <p className="text-[0.95rem] leading-relaxed text-foreground">
             {befund.klartext}
           </p>
+        )}
+
+        {/* Was zu tun ist. Steht in beiden Fassungen und auch im Druck —
+            ein Mangel ohne Weg heraus ist für den Leser wertlos. */}
+        {befund.massnahme !== undefined && befund.gewerk !== undefined && (
+          <div className="mt-4 border-t border-current/10 pt-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <h5 className="text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                Was zu tun ist
+              </h5>
+              {/* Ohne Aufwand — der steht schon in der Kopfzeile des Befunds. */}
+              <GewerkAbzeichen gewerk={befund.gewerk} />
+            </div>
+            <p className="mt-2 text-[0.95rem] leading-relaxed text-foreground">
+              {befund.massnahme}
+            </p>
+          </div>
         )}
       </div>
     </article>

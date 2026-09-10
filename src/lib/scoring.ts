@@ -1,8 +1,11 @@
+import { findeMassnahme } from "@/lib/massnahmen";
 import {
+  type Aufwand,
   type Befund,
   type Kategorie,
   KATEGORIE_DEFINITION,
   type KategorieId,
+  type Massnahme,
   type Report,
 } from "@/lib/types";
 
@@ -96,6 +99,57 @@ export function formuliereZusammenfassung(
   return `${dringlichkeit} — ${lobTeil}. ${kritische === 1 ? "Ein Punkt sollte" : `${kritische} Punkte sollten`} zeitnah angegangen werden, ${verbesserbare === 1 ? "ein weiterer lohnt" : `${verbesserbare} weitere lohnen`} sich.`;
 }
 
+/**
+ * Hängt einem Befund die passende Maßnahme an — nur bei `kritisch` und
+ * `verbesserbar`. Bei `gut` ist nichts zu tun, bei `unklar` wäre jede
+ * Maßnahme geraten.
+ */
+function mitMassnahme(befund: Befund): Befund {
+  if (befund.status !== "kritisch" && befund.status !== "verbesserbar") {
+    return befund;
+  }
+
+  const eintrag = findeMassnahme(befund.id);
+  if (eintrag === null) return befund;
+
+  return { ...befund, massnahme: eintrag.text, gewerk: eintrag.gewerk };
+}
+
+/** Kleiner Aufwand zuerst — die schnellen Gewinne stehen oben. */
+const AUFWAND_RANG: Record<Aufwand, number> = { klein: 0, mittel: 1, groß: 2 };
+
+/**
+ * Zieht alle Maßnahmen aus allen Kategorien zusammen. Sortiert nach
+ * Dringlichkeit, darin nach Aufwand: Was dringend und schnell erledigt ist,
+ * steht ganz oben.
+ */
+export function sammleMassnahmen(kategorien: Kategorie[]): Massnahme[] {
+  const massnahmen: Massnahme[] = [];
+
+  for (const kategorie of kategorien) {
+    for (const befund of kategorie.befunde) {
+      if (befund.status !== "kritisch" && befund.status !== "verbesserbar") continue;
+      if (befund.massnahme === undefined || befund.gewerk === undefined) continue;
+      if (befund.aufwand === undefined) continue;
+
+      massnahmen.push({
+        befundId: befund.id,
+        titel: befund.titel,
+        massnahme: befund.massnahme,
+        gewerk: befund.gewerk,
+        aufwand: befund.aufwand,
+        status: befund.status,
+        kategorie: kategorie.titel,
+      });
+    }
+  }
+
+  return massnahmen.sort((a, b) => {
+    if (a.status !== b.status) return a.status === "kritisch" ? -1 : 1;
+    return AUFWAND_RANG[a.aufwand] - AUFWAND_RANG[b.aufwand];
+  });
+}
+
 /** Setzt die Befunde der Module zu einem fertigen Report zusammen. */
 export function baueReport(input: {
   eingabeUrl: string;
@@ -105,7 +159,7 @@ export function baueReport(input: {
   ausCache: boolean;
 }): Report {
   const kategorien: Kategorie[] = KATEGORIE_DEFINITION.map((definition) => {
-    const befunde = input.befundeProKategorie[definition.id] ?? [];
+    const befunde = (input.befundeProKategorie[definition.id] ?? []).map(mitMassnahme);
     return {
       id: definition.id,
       titel: definition.titel,
@@ -125,6 +179,7 @@ export function baueReport(input: {
     gesamtscore,
     zusammenfassung: formuliereZusammenfassung(gesamtscore, kategorien),
     kategorien,
+    massnahmen: sammleMassnahmen(kategorien),
     manuelleHinweise: input.manuelleHinweise,
     ausCache: input.ausCache,
   };

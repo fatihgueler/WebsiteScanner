@@ -12,6 +12,48 @@ export type KategorieId =
   | "geo"
   | "inhalt";
 
+/**
+ * Wer den Punkt behebt. Dient im Report der Gruppierung des Maßnahmenplans
+ * und im Verkaufsgespräch der Abschätzung, was überhaupt anzufassen ist.
+ */
+export type Gewerk = "backend" | "frontend" | "design" | "inhalt" | "recht";
+
+export const GEWERK_DEFINITION: ReadonlyArray<{
+  id: Gewerk;
+  titel: string;
+  beschreibung: string;
+}> = [
+  {
+    id: "recht",
+    titel: "Recht & Organisation",
+    beschreibung:
+      "Pflichtangaben und Einwilligungen. Meist ohne Programmierung zu lösen, aber nicht ohne Sorgfalt.",
+  },
+  {
+    id: "backend",
+    titel: "Server & Hosting",
+    beschreibung:
+      "Einstellungen am Server oder beim Hoster. Die Website selbst bleibt dabei unangetastet.",
+  },
+  {
+    id: "frontend",
+    titel: "Umsetzung im Code",
+    beschreibung: "Arbeiten am Quelltext der Website — Vorlagen, Bilder, Einbindungen.",
+  },
+  {
+    id: "design",
+    titel: "Gestaltung & Bedienung",
+    beschreibung:
+      "Änderungen am Aufbau und an der Darstellung, nicht nur an der Technik dahinter.",
+  },
+  {
+    id: "inhalt",
+    titel: "Inhalte & Texte",
+    beschreibung:
+      "Was geschrieben, gesammelt oder aktualisiert werden muss. Hier ist Ihre Mitwirkung gefragt.",
+  },
+];
+
 export type Befund = {
   /** Stabile Kennung, damit React-Listen und Anker eindeutig bleiben. */
   id: string;
@@ -27,6 +69,27 @@ export type Befund = {
   technisch: string;
   /** Entfällt bei `gut` und `unklar`. */
   aufwand?: Aufwand;
+  /**
+   * Was konkret zu tun ist. Wird zentral in lib/massnahmen.ts gepflegt und
+   * beim Zusammenbauen des Reports angehängt — nur bei `kritisch` und
+   * `verbesserbar`, denn bei einem guten Befund ist nichts zu tun.
+   */
+  massnahme?: string;
+  /** Wer die Maßnahme umsetzt. Entfällt zusammen mit `massnahme`. */
+  gewerk?: Gewerk;
+};
+
+/** Ein Eintrag im Maßnahmenplan am Ende des Reports. */
+export type Massnahme = {
+  befundId: string;
+  /** Titel des zugehörigen Befunds. */
+  titel: string;
+  massnahme: string;
+  gewerk: Gewerk;
+  aufwand: Aufwand;
+  status: Extract<Status, "kritisch" | "verbesserbar">;
+  /** Anzeigename der Kategorie, aus der der Befund stammt. */
+  kategorie: string;
 };
 
 export type Kategorie = {
@@ -54,6 +117,12 @@ export type Report = {
   /** Ein zusammenfassender Satz über dem Report. */
   zusammenfassung: string;
   kategorien: Kategorie[];
+  /**
+   * Alle Maßnahmen aus allen Kategorien, für den gruppierten Plan am Ende
+   * des Reports. Sortiert: kritisch vor verbesserbar, darin kleiner Aufwand
+   * zuerst — die schnellen Gewinne stehen oben.
+   */
+  massnahmen: Massnahme[];
   /**
    * Hinweise auf Dinge, die sich grundsätzlich nicht automatisch prüfen
    * lassen (z. B. Google-Unternehmensprofil).

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { BefundKarte } from "@/components/befund-karte";
 import { LeadForm } from "@/components/lead-form";
+import { MassnahmenPlan } from "@/components/massnahmen-plan";
 import { ScoreBalken, ScoreRing, einordnungText } from "@/components/score-ring";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -193,6 +194,9 @@ export function ReportAnsicht({
           technischeAnsicht={technischeAnsicht}
         />
       )}
+
+      {/* ---------- Maßnahmenplan ---------- */}
+      <MassnahmenPlan massnahmen={report.massnahmen} />
 
       {/* ---------- Manuelle Hinweise ---------- */}
       {report.manuelleHinweise.length > 0 && (
